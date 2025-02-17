@@ -22,7 +22,9 @@ function shuffle(array) {
 function createBoard() {
     shuffle(cards);
     const gameBoard = document.getElementById('gameBoard');
+    if (!gameBoard) return;
     gameBoard.innerHTML = '';
+    
     cards.forEach((emoji) => {
         const card = document.createElement('div');
         card.classList.add('card');
