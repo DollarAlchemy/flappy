@@ -70,6 +70,11 @@
     </style>
 </head>
 <body>
+    <audio id="flipSound" src="sounds/flip.mp3"></audio>
+    <audio id="matchSound" src="sounds/match.mp3"></audio>
+    <audio id="restartSound" src="sounds/restart.mp3"></audio>
+    <audio id="backgroundMusic" src="sounds/backgroundmusic.mp3" loop></audio>
+    
     <div class="menu">
         <div>Time: <span id="timer">0</span>s</div>
         <button onclick="restartGame()">Restart</button>
@@ -84,6 +89,12 @@
         let timer = 0;
         let score = 0;
         let interval;
+
+        const flipSound = document.getElementById('flipSound');
+        const matchSound = document.getElementById('matchSound');
+        const restartSound = document.getElementById('restartSound');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        backgroundMusic.play();
 
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
@@ -110,6 +121,7 @@
             if (lockBoard || this === firstCard) return;
             this.innerText = this.dataset.emoji;
             this.classList.add('flipped');
+            flipSound.play();
             
             if (!firstCard) {
                 firstCard = this;
@@ -129,6 +141,7 @@
                     secondCard.classList.add('hidden');
                     score += 10;
                     document.getElementById('score').innerText = score;
+                    matchSound.play();
                     resetBoard();
                 }, 500);
             } else {
@@ -142,21 +155,8 @@
             }
         }
 
-        function resetBoard() {
-            [firstCard, secondCard, lockBoard] = [null, null, false];
-        }
-
-        function startTimer() {
-            clearInterval(interval);
-            timer = 0;
-            document.getElementById('timer').innerText = timer;
-            interval = setInterval(() => {
-                timer++;
-                document.getElementById('timer').innerText = timer;
-            }, 1000);
-        }
-
         function restartGame() {
+            restartSound.play();
             score = 0;
             document.getElementById('score').innerText = score;
             createBoard();
