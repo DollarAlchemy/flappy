@@ -5,6 +5,7 @@ let firstCard, secondCard;
 let lockBoard = false;
 let timer = 0;
 let score = 0;
+let matches = 0;
 let interval;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -24,6 +25,7 @@ function createBoard() {
     const gameBoard = document.getElementById('gameBoard');
     if (!gameBoard) return;
     gameBoard.innerHTML = '';
+    matches = 0;
     
     cards.forEach((emoji) => {
         const card = document.createElement('div');
@@ -58,9 +60,11 @@ function checkMatch() {
             firstCard.classList.add('hidden');
             secondCard.classList.add('hidden');
             score += 10;
+            matches++;
             document.getElementById('score').innerText = score;
             playMatchSound();
             resetBoard();
+            checkGameEnd();
         }, 500);
     } else {
         setTimeout(() => {
@@ -85,6 +89,19 @@ function startTimer() {
         timer++;
         document.getElementById('timer').innerText = timer;
     }, 1000);
+}
+
+function stopTimer() {
+    clearInterval(interval);
+}
+
+function checkGameEnd() {
+    if (matches === emojis.length) {
+        stopTimer();
+        setTimeout(() => {
+            alert(`🎉 Congratulations! You completed the game in ${timer} seconds! 🎉`);
+        }, 500);
+    }
 }
 
 function restartGame() {
