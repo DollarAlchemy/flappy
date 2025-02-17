@@ -4,88 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Emoji Memory Game</title>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background-color: #e0eafc;
-            font-family: Arial, sans-serif;
-            overflow: hidden;
-        }
-        .menu {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 650px;
-            margin-bottom: 20px;
-            padding: 10px;
-            background-color: #b0bec5;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        .menu button {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            background-color: #f28b82;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .menu button:hover {
-            background-color: #e57373;
-        }
-        .game-container {
-            display: grid;
-            grid-template-columns: repeat(6, 100px);
-            grid-template-rows: repeat(6, 100px);
-            gap: 10px;
-            background-color: #b0bec5;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        .card {
-            width: 100px;
-            height: 100px;
-            background-color: #f28b82;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: transform 0.3s, background-color 0.3s;
-        }
-        .card.flipped {
-            background-color: white;
-            pointer-events: none;
-            transform: rotateY(180deg);
-        }
-        .hidden {
-            visibility: hidden;
-        }
-        .firework {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: gold;
-            border-radius: 50%;
-            animation: explode 0.5s ease-out forwards;
-        }
-        @keyframes explode {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(4); opacity: 0; }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <audio id="flipSound" src="sounds/flip.mp3"></audio>
@@ -95,60 +14,12 @@
     
     <div class="menu">
         <div>Time: <span id="timer">0</span>s</div>
-        <button onclick="restartGame()">Restart</button>
+        <button id="restartButton">Restart</button>
         <div>Score: <span id="score">0</span></div>
     </div>
     <div class="game-container" id="gameBoard"></div>
-    <script>
-        const emojis = ['😀', '😂', '😍', '😎', '🤩', '🥳', '😜', '🤔', '🤖', '👻', '🎃', '🐱', '🐶', '🦊', '🐼', '🐵', '🐸', '🐯'];
-        let cards = [...emojis, ...emojis];
-        let firstCard, secondCard;
-        let lockBoard = false;
-        let timer = 0;
-        let score = 0;
-        let interval;
-
-        function createFirework(x, y) {
-            const firework = document.createElement('div');
-            firework.classList.add('firework');
-            firework.style.left = `${x}px`;
-            firework.style.top = `${y}px`;
-            document.body.appendChild(firework);
-            setTimeout(() => firework.remove(), 500);
-        }
-
-        function checkMatch() {
-            if (firstCard.dataset.emoji === secondCard.dataset.emoji) {
-                setTimeout(() => {
-                    firstCard.classList.add('hidden');
-                    secondCard.classList.add('hidden');
-                    score += 10;
-                    document.getElementById('score').innerText = score;
-                    matchSound.play();
-                    createFirework(firstCard.offsetLeft + 50, firstCard.offsetTop + 50);
-                    createFirework(secondCard.offsetLeft + 50, secondCard.offsetTop + 50);
-                    resetBoard();
-                }, 500);
-            } else {
-                setTimeout(() => {
-                    firstCard.innerText = '';
-                    secondCard.innerText = '';
-                    firstCard.classList.remove('flipped');
-                    secondCard.classList.remove('flipped');
-                    resetBoard();
-                }, 1000);
-            }
-        }
-
-        function restartGame() {
-            restartSound.play();
-            score = 0;
-            document.getElementById('score').innerText = score;
-            document.body.style.animation = 'fadeIn 1s';
-            createBoard();
-        }
-
-        createBoard();
-    </script>
+    
+    <script src="audio.js"></script>
+    <script src="game.js"></script>
 </body>
 </html>
