@@ -7,11 +7,36 @@
     <style>
         body {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             height: 100vh;
             background-color: #e0eafc;
             font-family: Arial, sans-serif;
+        }
+        .menu {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 650px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #b0bec5;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .menu button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #f28b82;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .menu button:hover {
+            background-color: #e57373;
         }
         .game-container {
             display: grid;
@@ -45,12 +70,20 @@
     </style>
 </head>
 <body>
+    <div class="menu">
+        <div>Time: <span id="timer">0</span>s</div>
+        <button onclick="restartGame()">Restart</button>
+        <div>Score: <span id="score">0</span></div>
+    </div>
     <div class="game-container" id="gameBoard"></div>
     <script>
         const emojis = ['😀', '😂', '😍', '😎', '🤩', '🥳', '😜', '🤔', '🤖', '👻', '🎃', '🐱', '🐶', '🦊', '🐼', '🐵', '🐸', '🐯'];
         let cards = [...emojis, ...emojis];
         let firstCard, secondCard;
         let lockBoard = false;
+        let timer = 0;
+        let score = 0;
+        let interval;
 
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
@@ -62,6 +95,7 @@
         function createBoard() {
             shuffle(cards);
             const gameBoard = document.getElementById('gameBoard');
+            gameBoard.innerHTML = '';
             cards.forEach((emoji, index) => {
                 const card = document.createElement('div');
                 card.classList.add('card');
@@ -69,6 +103,7 @@
                 card.addEventListener('click', flipCard);
                 gameBoard.appendChild(card);
             });
+            startTimer();
         }
 
         function flipCard() {
@@ -92,6 +127,8 @@
                 setTimeout(() => {
                     firstCard.classList.add('hidden');
                     secondCard.classList.add('hidden');
+                    score += 10;
+                    document.getElementById('score').innerText = score;
                     resetBoard();
                 }, 500);
             } else {
@@ -107,6 +144,22 @@
 
         function resetBoard() {
             [firstCard, secondCard, lockBoard] = [null, null, false];
+        }
+
+        function startTimer() {
+            clearInterval(interval);
+            timer = 0;
+            document.getElementById('timer').innerText = timer;
+            interval = setInterval(() => {
+                timer++;
+                document.getElementById('timer').innerText = timer;
+            }, 1000);
+        }
+
+        function restartGame() {
+            score = 0;
+            document.getElementById('score').innerText = score;
+            createBoard();
         }
 
         createBoard();
