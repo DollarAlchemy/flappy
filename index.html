@@ -13,6 +13,7 @@
             height: 100vh;
             background-color: #e0eafc;
             font-family: Arial, sans-serif;
+            overflow: hidden;
         }
         .menu {
             display: flex;
@@ -63,9 +64,26 @@
         .card.flipped {
             background-color: white;
             pointer-events: none;
+            transform: rotateY(180deg);
         }
         .hidden {
             visibility: hidden;
+        }
+        .firework {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: gold;
+            border-radius: 50%;
+            animation: explode 0.5s ease-out forwards;
+        }
+        @keyframes explode {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(4); opacity: 0; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
     </style>
 </head>
@@ -90,48 +108,13 @@
         let score = 0;
         let interval;
 
-        const flipSound = document.getElementById('flipSound');
-        const matchSound = document.getElementById('matchSound');
-        const restartSound = document.getElementById('restartSound');
-        const backgroundMusic = document.getElementById('backgroundMusic');
-        backgroundMusic.play();
-
-        function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                let j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-        }
-
-        function createBoard() {
-            shuffle(cards);
-            const gameBoard = document.getElementById('gameBoard');
-            gameBoard.innerHTML = '';
-            cards.forEach((emoji, index) => {
-                const card = document.createElement('div');
-                card.classList.add('card');
-                card.dataset.emoji = emoji;
-                card.addEventListener('click', flipCard);
-                gameBoard.appendChild(card);
-            });
-            startTimer();
-        }
-
-        function flipCard() {
-            if (lockBoard || this === firstCard) return;
-            this.innerText = this.dataset.emoji;
-            this.classList.add('flipped');
-            flipSound.play();
-            
-            if (!firstCard) {
-                firstCard = this;
-                return;
-            }
-            
-            secondCard = this;
-            lockBoard = true;
-            
-            checkMatch();
+        function createFirework(x, y) {
+            const firework = document.createElement('div');
+            firework.classList.add('firework');
+            firework.style.left = `${x}px`;
+            firework.style.top = `${y}px`;
+            document.body.appendChild(firework);
+            setTimeout(() => firework.remove(), 500);
         }
 
         function checkMatch() {
@@ -142,6 +125,8 @@
                     score += 10;
                     document.getElementById('score').innerText = score;
                     matchSound.play();
+                    createFirework(firstCard.offsetLeft + 50, firstCard.offsetTop + 50);
+                    createFirework(secondCard.offsetLeft + 50, secondCard.offsetTop + 50);
                     resetBoard();
                 }, 500);
             } else {
@@ -159,6 +144,7 @@
             restartSound.play();
             score = 0;
             document.getElementById('score').innerText = score;
+            document.body.style.animation = 'fadeIn 1s';
             createBoard();
         }
 
