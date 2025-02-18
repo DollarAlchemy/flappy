@@ -142,7 +142,21 @@ function checkGameEnd() {
         stopTimer();
         setTimeout(() => {
             displayEndScreen();
+            triggerEmojiDance();
         }, 500);
+    }
+}
+
+function triggerEmojiDance() {
+    const gameBoard = document.getElementById('gameBoard');
+    gameBoard.innerHTML = '';
+    for (let i = 0; i < 20; i++) {
+        const emoji = document.createElement('div');
+        emoji.classList.add('emoji-dance');
+        emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+        emoji.style.left = Math.random() * 90 + "%";
+        emoji.style.top = Math.random() * 90 + "%";
+        gameBoard.appendChild(emoji);
     }
 }
 
