@@ -140,11 +140,19 @@ function stopTimer() {
 function checkGameEnd() {
     if (matches === cards.length / 2) {
         stopTimer();
+        updateBestTime();
         setTimeout(() => {
             playWinSound();
             displayEndScreen();
             triggerEmojiDance();
         }, 500);
+    }
+}
+
+function updateBestTime() {
+    if (bestTime === "-" || timer < bestTime) {
+        bestTime = timer;
+        localStorage.setItem('bestTime', bestTime);
     }
 }
 
