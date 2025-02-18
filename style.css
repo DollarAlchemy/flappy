@@ -8,6 +8,7 @@ body {
     background-color: #e0eafc;
     font-family: Arial, sans-serif;
     margin: 0;
+    overflow: hidden;
 }
 .hidden {
     display: none;
@@ -26,32 +27,24 @@ body {
     text-align: center;
     animation: fadeIn 0.5s ease-in;
 }
-.menu-screen h1 {
-    font-size: 28px;
-    color: #333;
+
+/* Emoji Dance Animation */
+.emoji-dance {
+    position: absolute;
+    font-size: 2.5rem;
+    animation: floatUp 3s ease-in-out infinite, spin 4s linear infinite;
+    opacity: 0.9;
 }
-.menu-screen label {
-    font-size: 18px;
-    margin-top: 10px;
+
+@keyframes floatUp {
+    0% { transform: translateY(0); opacity: 1; }
+    50% { transform: translateY(-100px) scale(1.2); opacity: 0.8; }
+    100% { transform: translateY(-200px) scale(1); opacity: 0; }
 }
-.menu-screen select {
-    font-size: 16px;
-    padding: 5px;
-    margin-top: 5px;
-}
-.menu-screen button {
-    margin-top: 15px;
-    padding: 10px 15px;
-    font-size: 18px;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-.menu-screen button:hover {
-    background-color: #388e3c;
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 /* Game UI Styling */
