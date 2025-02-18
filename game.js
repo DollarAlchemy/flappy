@@ -1,6 +1,6 @@
 /* game.js */
 const emojis = ['😀', '😂', '😍', '😎', '🤩', '🥳', '😜', '🤔', '🤖', '👻', '🎃', '🐱', '🐶', '🦊', '🐼', '🐵', '🐸', '🐯'];
-let cards = [...emojis, ...emojis];
+let cards = [];
 let firstCard, secondCard;
 let lockBoard = false;
 let timer = 0;
@@ -9,12 +9,49 @@ let matches = 0;
 let moves = 0;
 let bestTime = localStorage.getItem('bestTime') || "-";
 let interval;
+let gridSize = 6;
 
 document.addEventListener("DOMContentLoaded", () => {
-    createBoard();
+    document.getElementById("startGameButton").addEventListener("click", startGame);
     document.getElementById("restartButton").addEventListener("click", restartGame);
     updateBestTimeDisplay();
 });
+
+function startGame() {
+    const difficulty = document.getElementById("difficulty").value;
+    const cardTheme = document.getElementById("cardTheme").value;
+    const music = document.getElementById("music").value;
+    
+    document.getElementById("backgroundMusic").src = `sounds/${music}`;
+    document.getElementById("backgroundMusic").play();
+    
+    setGridSize(difficulty);
+    generateCards();
+    applyCardTheme(cardTheme);
+    
+    document.getElementById("startMenu").classList.add("hidden");
+    document.getElementById("gameUI").classList.remove("hidden");
+    createBoard();
+}
+
+function setGridSize(difficulty) {
+    if (difficulty === "easy") gridSize = 4;
+    else if (difficulty === "hard") gridSize = 8;
+    else gridSize = 6;
+}
+
+function generateCards() {
+    const totalPairs = (gridSize * gridSize) / 2;
+    const selectedEmojis = emojis.slice(0, totalPairs);
+    cards = [...selectedEmojis, ...selectedEmojis];
+    shuffle(cards);
+}
+
+function applyCardTheme(theme) {
+    document.documentElement.style.setProperty('--card-back-color', theme === 'red' ? '#f28b82' : 
+        theme === 'blue' ? '#82b1ff' : 
+        theme === 'green' ? '#81c784' : '#5c6bc0');
+}
 
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -24,9 +61,9 @@ function shuffle(array) {
 }
 
 function createBoard() {
-    shuffle(cards);
     const gameBoard = document.getElementById('gameBoard');
-    if (!gameBoard) return;
+    gameBoard.style.gridTemplateColumns = `repeat(${gridSize}, 100px)`;
+    gameBoard.style.gridTemplateRows = `repeat(${gridSize}, 100px)`;
     gameBoard.innerHTML = '';
     matches = 0;
     moves = 0;
@@ -101,36 +138,12 @@ function stopTimer() {
 }
 
 function checkGameEnd() {
-    if (matches === emojis.length) {
+    if (matches === cards.length / 2) {
         stopTimer();
         setTimeout(() => {
             displayEndScreen();
         }, 500);
     }
-}
-
-function displayEndScreen() {
-    const gameBoard = document.getElementById('gameBoard');
-    gameBoard.innerHTML = `<div class='end-screen'>
-        <h2>🎉 Congratulations! 🎉</h2>
-        <p>You completed the game in <strong>${timer}</strong> seconds with <strong>${moves}</strong> moves!</p>
-        <p>Best Time: <strong>${bestTime}</strong></p>
-        <button onclick='restartGame()'>Play Again</button>
-    </div>`;
-    gameBoard.classList.add('centered');
-    checkBestTime();
-}
-
-function checkBestTime() {
-    if (bestTime === "-" || timer < bestTime) {
-        localStorage.setItem('bestTime', timer);
-        bestTime = timer;
-    }
-    updateBestTimeDisplay();
-}
-
-function updateBestTimeDisplay() {
-    document.getElementById('bestTimeDisplay').innerText = `Best Time: ${bestTime}s`;
 }
 
 function restartGame() {
