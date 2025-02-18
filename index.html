@@ -10,14 +10,46 @@
     <audio id="flipSound" src="sounds/flip.mp3"></audio>
     <audio id="matchSound" src="sounds/match.mp3"></audio>
     <audio id="restartSound" src="sounds/restart.mp3"></audio>
-    <audio id="backgroundMusic" src="sounds/backgroundmusic.mp3" loop></audio>
+    <audio id="backgroundMusic" src="sounds/backgroundmusic1.mp3" loop></audio>
     
-    <div class="menu">
-        <div>Time: <span id="timer">0</span>s</div>
-        <button id="restartButton">Restart</button>
-        <div>Score: <span id="score">0</span></div>
+    <!-- Start Menu -->
+    <div id="startMenu" class="menu-screen">
+        <h1>Emoji Memory Game</h1>
+        <label for="difficulty">Select Difficulty:</label>
+        <select id="difficulty">
+            <option value="easy">Easy (4x4)</option>
+            <option value="medium" selected>Medium (6x6)</option>
+            <option value="hard">Hard (8x8)</option>
+            <option value="challenge">Challenge Mode</option>
+        </select>
+        
+        <label for="cardTheme">Select Card Back Theme:</label>
+        <select id="cardTheme">
+            <option value="red" selected>Classic Red</option>
+            <option value="blue">Cool Blue</option>
+            <option value="green">Nature Green</option>
+            <option value="space">Space Theme</option>
+        </select>
+        
+        <label for="music">Select Background Music:</label>
+        <select id="music">
+            <option value="backgroundmusic1.mp3" selected>Track 1</option>
+            <option value="backgroundmusic2.mp3">Track 2</option>
+            <option value="backgroundmusic3.mp3">Track 3</option>
+        </select>
+        
+        <button id="startGameButton">Start Game</button>
     </div>
-    <div class="game-container" id="gameBoard"></div>
+    
+    <!-- Game UI (Initially Hidden) -->
+    <div id="gameUI" class="hidden">
+        <div class="menu">
+            <div>Time: <span id="timer">0</span>s</div>
+            <button id="restartButton">Restart</button>
+            <div>Score: <span id="score">0</span></div>
+        </div>
+        <div class="game-container" id="gameBoard"></div>
+    </div>
     
     <script src="game.js" defer></script>
     <script src="audio.js" defer></script>
